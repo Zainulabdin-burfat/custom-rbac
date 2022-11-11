@@ -10,7 +10,6 @@ trait HasPermissionsTrait
 
     public function givePermissionsTo(...$permissions)
     {
-
         $permissions = $this->getAllPermissions($permissions);
 
         if ($permissions === null) {

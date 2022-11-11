@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,11 @@ Route::group(['middleware' => ['role:admin', 'auth']], function() {
 
  });
 
+
+Route::get('/syncpermissions', function(){
+    Artisan::call("create:permission");
+    return back();
+});
 
 // Route::get('/roles', "PermissionController@Permission");
 
