@@ -11,12 +11,14 @@
                         </div>
                         <div class="col-sm-6">
 
-                            @role('admin')
+                            {{-- @role('admin') --}}
+                            @can('create', 'role')
                                 <a href="roles/create" class="btn btn-success">
                                     <i class="material-icons">&#xE147;</i> <span>Add New Role</span>
                                 </a>
 
-                            @endrole
+                            @endcan
+                            {{-- @endrole --}}
                         </div>
                     </div>
                 </div>

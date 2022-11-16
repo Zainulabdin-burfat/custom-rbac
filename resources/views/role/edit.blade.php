@@ -23,24 +23,52 @@
                         </div>
 
                         <div class="form-group">
-                            <select class="custom-select" name="permissions[]" multiple>
-                                <option value="0">Select Permissions</option>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                    id="all">
+                                                <label class="form-check-label" for="all">
+                                                    All Permissions
+                                                </label>
+                                            </div>
+                                        </th>
+                                        {{-- <label><input type=checkbox id=all></label>All Permissions</th> --}}
+                                        <th></th>
+                                    </tr>
+                                </thead>
 
-                                @php $permissionIds = $role['permissions']->pluck('id')->toArray(); @endphp
+                                <tbody>
+                                    @forelse ($permissions as $permission)
+                                        @php $permission = $permission->pluck('slug', 'id'); @endphp
 
-                                @forelse ($permissions as $permission)
-                                    @if (in_array($permission['id'], $permissionIds))
-                                        <option value="{{ $permission['id'] }}" selected>{{ $permission['name'] }}</option>
-                                    @else
-                                        <option value="{{ $permission['id'] }}">{{ $permission['name'] }}</option>
-                                    @endif
-                                @empty
-                                    <option value="0">No Permissions Found..!</option>
-                                @endforelse
-                            </select>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="parent form-check-input" type="checkbox">
+                                                    <label class="form-check-label">{{ $permission['name'] }}</label>
+                                                </div>
+
+                                                <label><input type=checkbox class="child form-check-input"
+                                                        name="{{ $permission['name'] }}[]"
+                                                        value={{ $permission['id'] }}></label>
+                                            </td>
+                                            <td>
+                                                <span>{{ $permission['slug'] }}</span>
+
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td>No Permissions Found..!</td>
+                                        </tr>
+                                    @endforelse
+
+                                </tbody>
+                            </table>
                         </div>
-
-
                     </div>
 
                     <div class="modal-footer">
@@ -49,68 +77,93 @@
                     </div>
                 </form>
 
-                <div class="row">
-                    <div class="col-sm-12">
 
-                        <div class="widget-body">
-                            <ul id="auto-checkboxes" data-name="foo" class="list-unstyled list-feature">
-                                <li id="mainNode" class="ui-widget ui-widget-content daredevel-tree">
-                                    <input type="checkbox" class="hrv-checkbox-parent"
-                                        id="expandCollapseAllTree">&nbsp;&nbsp;
-                                    <label for="expandCollapseAllTree" class="label label-default allTree">All
-                                        Permissions</label>
-                                    <ul>
-                                        <li class=" ui-widget ui-widget-content daredevel-tree" id="node0">
-                                            <span class="daredevel-tree-anchor ui-icon ui-icon-triangle-1-e"></span>
-                                            <input type="checkbox" class="hrv-checkbox" id="checkSelect0" name="flags[]"
-                                                value="ads.index">
-                                            <label for="checkSelect0" class="label label-warning"
-                                                style="margin: 5px;">Ads</label>
-                                            <ul style="">
-                                                <li class=" ui-widget ui-widget-content daredevel-tree"
-                                                    id="node_sub_0_0"><span
-                                                        class="daredevel-tree-anchor ui-icon-triangle-1-e daredevel-tree-label ui-icon"></span>
-                                                    <input type="checkbox" class="hrv-checkbox" id="checkSelect_sub_0_0"
-                                                        name="flags[]" value="ads.create">
-                                                    <label for="checkSelect_sub_0_0"
-                                                        class="label label-primary nameMargin">List</label>
-                                                </li>
-                                                <li class=" ui-widget ui-widget-content daredevel-tree"
-                                                    id="node_sub_0_0"><span
-                                                        class="daredevel-tree-anchor ui-icon-triangle-1-e daredevel-tree-label ui-icon"></span>
-                                                    <input type="checkbox" class="hrv-checkbox" id="checkSelect_sub_0_0"
-                                                        name="flags[]" value="ads.create">
-                                                    <label for="checkSelect_sub_0_0"
-                                                        class="label label-primary nameMargin">Create</label>
-                                                </li>
-                                                <li class=" ui-widget ui-widget-content daredevel-tree"
-                                                    id="node_sub_0_1"><span
-                                                        class="daredevel-tree-anchor ui-icon-triangle-1-e daredevel-tree-label ui-icon"></span>
-                                                    <input type="checkbox" class="hrv-checkbox" id="checkSelect_sub_0_1"
-                                                        name="flags[]" value="ads.edit">
-                                                    <label for="checkSelect_sub_0_1"
-                                                        class="label label-primary nameMargin">Edit</label>
-                                                </li>
-                                                <li class=" ui-widget ui-widget-content daredevel-tree"
-                                                    id="node_sub_0_2"><span
-                                                        class="daredevel-tree-anchor ui-icon-triangle-1-e daredevel-tree-label ui-icon"></span>
-                                                    <input type="checkbox" class="hrv-checkbox" id="checkSelect_sub_0_2"
-                                                        name="flags[]" value="ads.destroy">
-                                                    <label for="checkSelect_sub_0_2"
-                                                        class="label label-primary nameMargin">Delete</label>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
 
-                                </li>
-                            </ul>
-                        </div>
-
-                    </div>
-                </div>
 
             </div>
         </div>
+
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        // *️⃣ Code for indeterminate state - There are comments for removal
+        // Bind all checkboxes to the change event
+        $(':checkbox').on('change', checkUncheck);
+
+        function checkUncheck(e) {
+            // The tag the user checked/unchecked
+            const $this = $(this);
+            // Reference to the closest <tr>
+            const $row = $this.closest('tr');
+            /*
+            If the user clicked a .parent...
+            ...and if it is checked...
+            ... .find() all the <td> of $row...
+            ...and check them all...
+            ...otherwise uncheck them all
+            */
+            if ($this.is('.parent')) {
+                if ($this.is(':checked')) {
+                    $row.find('.child').prop('checked', true);
+                } else {
+                    $row.find('.child').prop('checked', false);
+                }
+            }
+            /*
+            If the user checked/unchecked a .child...
+            ... .makeArray() of all of $row .child and...
+            ... if .every() <td> is .checked then check .parent
+            ... and if .some() <td> are .checked then .parent is...
+            ... indeterminate, otherwise uncheck .parent
+            */
+            if ($this.is('.child')) {
+                $row.find('.parent').prop('indeterminate', false); //*️⃣
+                const chxArray = jQuery.makeArray($row.find('.child'));
+                let rowChecked = chxArray.every(cb => cb.checked); //*️⃣
+                let someChecked = chxArray.some(cb => cb.checked);
+                if (rowChecked) {
+                    /* if (someChecked) { */ //*️⃣ 
+                    $row.find('.parent').prop('checked', true);
+                } else if (someChecked) {
+                    $row.find('.parent').prop('indeterminate', true); //*️⃣
+                } else {
+                    $row.find('.parent').prop('checked', false);
+                }
+            }
+            /*
+            If the user clicked #all...
+            ...and if it is checked...
+            ... .find() all the <td> of $tB...
+            ...and check them all...
+            ...otherwise uncheck them all
+            */
+            if ($this.is('#all')) {
+                $('.parent').prop('indeterminate', false); //*️⃣
+                if ($this.is(':checked')) {
+                    $(':checkbox').prop('checked', true);
+                } else {
+                    $(':checkbox').prop('checked', false);
+                }
+            }
+            /*
+            If the user checked/unchecked a .child or .parent...
+            ... .makeArray() of all of <td> in <tbody> and...
+            ... if .every() <td> is checked...
+            ... #all is checked and if .some() <td> are checked...
+            ... then #all is indeterminate...
+            ... otherwise uncheck #all
+            */
+            let allArray = jQuery.makeArray($(':checkbox').not('#all'));
+            if (allArray.every(cb => cb.checked)) {
+                $('#all').prop('indeterminate', false); //*️⃣
+                $('#all').prop('checked', true); /* Move to: ✳️ */
+            } else if (allArray.some(cb => cb.checked)) {
+                $('#all').prop('indeterminate', true); //*️⃣ ✳️
+            } else {
+                $('#all').prop('indeterminate', false); //*️⃣
+                $('#all').prop('checked', false);
+            }
+        }
+    </script>
 @endsection

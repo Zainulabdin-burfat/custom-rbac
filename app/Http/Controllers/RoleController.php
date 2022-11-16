@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\RolePermission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -19,7 +20,6 @@ class RoleController extends Controller
     public function index()
     {
         // $roles = Role::paginate(3);
-
         return view('role.index', ['roles' => Role::orderByDesc('id')->get()]);
     }
 
@@ -41,10 +41,7 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        Role::create([
-            "name" => $request->name,
-            "slug" => $request->slug,
-        ]);
+        Role::create(["name" => $request->name]);
 
         return $this->index();
     }
@@ -68,7 +65,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $permissions = Permission::all();
+        $permissions = Permission::all()->groupBy('name');
         return view('role.edit', compact(['role', 'permissions']));
     }
 
@@ -82,15 +79,16 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, Role $role)
     {
         $role->name = $request->name;
-        $role->slug = $request->slug;
 
-        if (isset($request->permissions) && !empty($request->permissions)) {
-            RolePermission::where('role_id', $role->id)->delete();
+        // if (isset($request->permissions) && !empty($request->permissions)) {
+        //     RolePermission::where('role_id', $role->id)->delete();
 
-            foreach ($request->permissions as $permissionId)
-                if ($permissionId > 0)
-                    RolePermission::create(['role_id' => $role->id, 'permission_id' => $permissionId]);
-        }
+            $role->permissions()->attach($request->permissions);
+
+            // foreach ($request->permissions as $permissionId)
+            //     if ($permissionId > 0)
+            //         RolePermission::create(['role_id' => $role->id, 'permission_id' => $permissionId]);
+        // }
 
         $role->save();
 

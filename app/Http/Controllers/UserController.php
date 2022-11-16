@@ -18,13 +18,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->can('list-users')) {
-            $users = User::get(['id', 'name', 'email'])->map->formatIndex()->toArray();
-            return view('user.index', ['users' => $users]);
-        }
-
-
-        return abort(401, "Access Denied");
+        $users = User::get(['id', 'name', 'email'])->map->formatIndex()->toArray();
+        return view('user.index', ['users' => $users]);
     }
 
     /**
@@ -34,11 +29,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->can('create-users')) {
-            return view('user.create');
-        }
-
-        return abort(401, "Access Denied");
+        return view('user.create');
     }
 
     /**
@@ -49,15 +40,13 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        if (Auth::user()->can('create-users')) {
-            User::create([
-                "name" => $request->name,
-                "email" => $request->eRoleUsermail,
-                "password" => bcrypt($request->password)
-            ]);
+        User::create([
+            "name" => $request->name,
+            "email" => $request->eRoleUsermail,
+            "password" => bcrypt($request->password)
+        ]);
 
-            return $this->index();
-        }
+        return $this->index();
     }
 
     /**
@@ -68,11 +57,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        if (Auth::user()->can('list-users')) {
-            return view('user.show', ['user' => $user->formatIndex()]);
-        }
-
-        return abort(401, "Access Denied");
+        return view('user.show', ['user' => $user->formatIndex()]);
     }
 
     /**
@@ -83,12 +68,17 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        if (Auth::user()->can('edit-users')) {
-            $roles = Role::all();
-            return view('user.edit', compact(['user', 'roles']));
-        }
+        return view('users.edit', [
+            'user' => $user,
+            'userRole' => $user->roles->pluck('name')->toArray(),
+            'roles' => Role::latest()->get()
+        ]);
 
-        return abort(401, "Access Denied");
+        //     $roles = Role::all();
+        //     return view('user.edit', compact(['user', 'roles']));
+        // }
+
+        // return abort(401, "Access Denied");
     }
 
     /**
@@ -100,24 +90,20 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        if (Auth::user()->can('edit-users')) {
-            $user->name  = $request->name;
-            $user->email = $request->email;
+        $user->name  = $request->name;
+        $user->email = $request->email;
 
-            if (isset($request->roles) && !empty($request->roles)) {
-                UserRole::where('user_id', $user->id)->delete();
+        if (isset($request->roles) && !empty($request->roles)) {
+            UserRole::where('user_id', $user->id)->delete();
 
-                foreach ($request->roles as $roleId)
-                    if ($roleId > 0)
-                        UserRole::create(['user_id' => $user->id, 'role_id' => $roleId]);
-            }
-
-            $user->save();
-
-            return $this->index();
+            foreach ($request->roles as $roleId)
+                if ($roleId > 0)
+                    UserRole::create(['user_id' => $user->id, 'role_id' => $roleId]);
         }
 
-        return abort(401, "Access Denied");
+        $user->save();
+
+        return $this->index();
     }
 
     /**
@@ -128,14 +114,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if (Auth::user()->can('edit-users')) {
-            if ($user->can('delete-tasks')) {
-                $user->delete();
+        $user->delete();
 
-                return $this->index();
-            }
-        }
-
-        return abort(401, "Access Denied");
+        return $this->index();
     }
 }

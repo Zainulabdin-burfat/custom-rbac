@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class RoleMiddleware
+class Permissions
 {
     /**
      * Handle an incoming request.
@@ -14,15 +14,11 @@ class RoleMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, $role, $permission = null)
+    public function handle(Request $request, Closure $next)
     {
-        if (!$request->user()->hasRole($role)) {
-            abort(404);
-        }
-
-        if ($permission !== null && !$request->user()->can($permission)) {
-            abort(404);
-        }
+        // dd( $request->route()->getActionName());
+        if (!$request->user()->hasPermissionTo($request->route()->getName()))
+            abort(401);
 
         return $next($request);
     }

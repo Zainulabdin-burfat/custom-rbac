@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use App\Permissions\HasPermissionsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
-    use HasFactory, HasPermissionsTrait;
 
     protected $fillable = ['name', 'email', 'password'];
 
@@ -22,10 +20,16 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class, 'role_user');
     }
-
-    public function permissions()
+    
+    public function hasPermissionTo($permission)
     {
-        return $this->belongsToMany(Permission::class, 'permission_user');
+        foreach ($this->roles as $role) {
+            $permissions = $role->permissions->pluck('name')->toArray();
+            if(in_array($permission, $permissions))
+                return true;
+        }
+
+        return false;
     }
 
     public function formatIndex()
@@ -43,11 +47,4 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
-    // public function run()
-    // {
-    //     User::factory()
-    //         ->count(50)
-    //         ->hasPosts(1)
-    //         ->create();
-    // }
 }

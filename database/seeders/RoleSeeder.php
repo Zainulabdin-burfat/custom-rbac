@@ -20,20 +20,25 @@ class RoleSeeder extends Seeder
     {
 
         $data = [
-            ['name' => 'Admin', 'slug' => 'admin'],
-            ['name' => 'Author', 'slug' => 'author'],
-            ['name' => 'User', 'slug' => 'user'],
-            ['name' => 'Manager','slug' => 'manager'],
+            ['name' => 'Admin'],
+            ['name' => 'Author'],
+            ['name' => 'User'],
+            ['name' => 'Manager'],
         ];
         
         Role::insert($data);
 
         $data = [
-            ['user_id' => rand(1,10), 'role_id' => rand(1,4)],
-            ['user_id' => rand(1,10), 'role_id' => rand(1,4)],
-            ['user_id' => rand(1,10), 'role_id' => rand(1,4)],
-            ['user_id' => rand(1,10), 'role_id' => rand(1,4)],
-            ['user_id' => rand(1,10), 'role_id' => rand(1,4)],
+            ['user_id' => 1, 'role_id' => 1],
+            ['user_id' => 2, 'role_id' => rand(1,4)],
+            ['user_id' => 3, 'role_id' => rand(1,4)],
+            ['user_id' => 4, 'role_id' => rand(1,4)],
+            ['user_id' => 5, 'role_id' => rand(1,4)],
+            ['user_id' => 6, 'role_id' => rand(1,4)],
+            ['user_id' => 7, 'role_id' => rand(1,4)],
+            ['user_id' => 8, 'role_id' => rand(1,4)],
+            ['user_id' => 9, 'role_id' => rand(1,4)],
+            ['user_id' => 10, 'role_id' => rand(1,4)],
         ];
 
         UserRole::insert($data);

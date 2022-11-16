@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePermissionRequest;
 use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Permission;
+use App\Models\User;
 
 class PermissionController extends Controller
 {
@@ -15,6 +16,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
+
         // $permissions = Permission::paginate(3);
 
         return view('permission.index', ['permissions' => Permission::orderByDesc('id')->get()]);
@@ -38,10 +40,7 @@ class PermissionController extends Controller
      */
     public function store(StorePermissionRequest $request)
     {
-        Permission::create([
-            "name" => $request->name,
-            "slug" => $request->slug,
-        ]);
+        Permission::create(["name" => $request->name]);
 
         return $this->index();
     }
@@ -78,8 +77,6 @@ class PermissionController extends Controller
     public function update(UpdatePermissionRequest $request, Permission $permission)
     {
         $permission->name = $request->name;
-        $permission->slug = $request->slug;
-
 
         $permission->save();
 

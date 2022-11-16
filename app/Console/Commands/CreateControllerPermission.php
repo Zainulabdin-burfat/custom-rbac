@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Permission;
+use App\Models\RolePermission;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +27,7 @@ class CreateControllerPermission extends Command
      *
      * @var string
      */
-    protected $description = 'This Command will create permissions of the newly created controller.';
+    protected $description = 'This Command will create permissions of the controllers.';
 
     /**
      * Create a new command instance.
@@ -51,11 +52,10 @@ class CreateControllerPermission extends Command
 
         $methods = [];
         foreach ($controller_methods as $method) {
-            $methods[] = (string) Str::of($controllerName)->append(" " . $method->name)->slug('-');
+            $methods[] = (string) Str::of($controllerName)->append(" " . $method->name)->slug('.');
 
-            if ($method->name === "destroy") {
+            if ($method->name === "destroy")
                 break;
-            }
         }
 
         return $methods;
@@ -63,7 +63,13 @@ class CreateControllerPermission extends Command
 
     public function handle()
     {
+
         Permission::truncate();
+        $this->newLine();
+        $this->info("Permission table truncated.");
+        $this->newLine();
+
+
         $files = File::files("app/Http/Controllers");
 
         foreach ($files as $controller) {
@@ -72,23 +78,44 @@ class CreateControllerPermission extends Command
             $controller     = Str::of($filePathName)->afterLast('/')->remove('.php');
             $controllerName = Str::of($filePathName)->afterLast('/')->remove('Controller.php');
 
-            if ($fileName === "Controller.php") {
+            if ($fileName === "Controller.php")
                 continue;
-            }
 
-            $methods = $this->getControllerMethodNames($controller, $controllerName);
+            $methods = (array)$this->getControllerMethodNames($controller, $controllerName);
 
-            $permission = Permission::firstOrCreate([
-                "name" => $controllerName,
-                "slug" => json_encode($methods)
-            ]);
+            foreach ($methods as $method) {
+                $permission = Permission::firstOrCreate(["name" => $method]);
 
-            if ($permission->wasRecentlyCreated) {
-                $this->info("$controller permission created.");
-            } else {
-                $this->info("$controller permission already exist.");
+                if ($permission->wasRecentlyCreated) {
+                    $this->info("$controller permission created ($method)");
+                } else {
+                    $this->info("$controller permission already exists ($method)");
+                }
             }
         }
+
+        $this->newLine(2);
+
+        $permissions = Permission::get('id')->pluck('id')->toArray();
+
+        $permissionIds = [];
+        foreach ($permissions as $permissionId) {
+            $permissionIds[] = ['role_id' => 1, 'permission_id' => $permissionId];
+        }
+        if ($permissionIds) {
+            RolePermission::insert($permissionIds);
+            $this->info("All permissions assigned to admin role");
+        }
+
+        $this->newLine(2);
+
+
+        
+
+
+        $this->newLine(2);
+        $this->info("Warning!, The last method of the controller should be destroy method otherwise it will not create other permissions.");
+        $this->newLine(2);
 
         // $this->newLine(2);
         // $this->error('Something went wrong!');

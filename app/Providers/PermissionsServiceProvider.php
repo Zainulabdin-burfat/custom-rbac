@@ -28,7 +28,7 @@ class PermissionsServiceProvider extends ServiceProvider
     {
         try {
             Permission::get()->map(function ($permission) {
-                Gate::define($permission->slug, function ($user) use ($permission) {
+                Gate::define($permission->name, function ($user) use ($permission) {
                     return $user->hasPermissionTo($permission);
                 });
             });
@@ -38,11 +38,11 @@ class PermissionsServiceProvider extends ServiceProvider
         }
 
         //Blade directives
-        Blade::directive('role', function ($role) {
-            return "<?php if( auth()->check() && auth()->user()->hasRole($role) ){ ?>";
+        Blade::directive('permission', function ($permission) {
+            return "<?php if( auth()->check() && auth()->user()->hasPermissionTo($permission) ){ ?>";
         });
 
-        Blade::directive('endrole', function () {
+        Blade::directive('endpermission', function () {
             return "<?php } ?>";
         });
     }
