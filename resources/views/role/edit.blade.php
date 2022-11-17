@@ -37,21 +37,36 @@
                                 </thead>
 
                                 <tbody>
-                                    @forelse ($permissions as $permissionId => $permissionName)
+                                    <div style="max-height: 50px; overflow-y: auto">
+                                    @php
+                                        $currentPermissions = $role->permissions->pluck('id')->toArray();
+                                    @endphp
+                                    @forelse ($permissions as $permissionName => $permissionsArray)
                                         <tr>
                                             <td>
                                                 <div class="form-check">
                                                     <input class="parent form-check-input" type="checkbox">
-                                                    <label class="form-check-label">{{ $permissionName }}</label>
+                                                    <label class="form-check-label">{{ ucfirst($permissionName) }}</label>
                                                 </div>
 
-                                                <label><input type=checkbox class="child form-check-input"
-                                                        name="{{ $permissionName }}[]"
-                                                        value={{ $permissionId }}></label>
                                             </td>
                                             <td>
-                                                <span>{{ $permissionName }}</span>
 
+                                                <div class="card p-2">
+                                                    <ul class="child">
+                                                        @forelse ($permissionsArray as $id => $permission)
+                                                            <li>
+                                                                <input type="checkbox" class="child"
+                                                                    value="{{ $id }}"
+                                                                    @php echo (in_array($id, $currentPermissions)) ? "checked" : null @endphp
+                                                                    name="permissions[]{{ $permissionName }}[]" /> {{ $permission }}
+                                                            </li>
+                                                        @empty
+                                                            <li> - </li>
+                                                        @endforelse
+
+                                                    </ul>
+                                                </div>
                                             </td>
                                         </tr>
                                     @empty
@@ -59,7 +74,7 @@
                                             <td>No Permissions Found..!</td>
                                         </tr>
                                     @endforelse
-
+                                    </div>
                                 </tbody>
                             </table>
                         </div>

@@ -66,12 +66,10 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-
-        
-        // $permissions = DB::select("SELECT LEFT(p.name ,LOCATE('.',p.name) - 1) as parent, p.name from permissions p GROUP BY p.name");
         $permissions = Permission::all()->pluck('name', 'id')->toArray();
 
-        dd($permissions);
+        $permissions = $this->formatArray($permissions);
+
         return view('role.edit', compact(['role', 'permissions']));
     }
 
@@ -86,15 +84,10 @@ class RoleController extends Controller
     {
         $role->name = $request->name;
 
-        // if (isset($request->permissions) && !empty($request->permissions)) {
-        //     RolePermission::where('role_id', $role->id)->delete();
-
+        if (isset($request->permissions) && !empty($request->permissions)) {
+            $role->permissions()->detach();
             $role->permissions()->attach($request->permissions);
-
-            // foreach ($request->permissions as $permissionId)
-            //     if ($permissionId > 0)
-            //         RolePermission::create(['role_id' => $role->id, 'permission_id' => $permissionId]);
-        // }
+        }
 
         $role->save();
 
@@ -112,5 +105,21 @@ class RoleController extends Controller
         $role->delete();
 
         return $this->index();
+    }
+
+    public function formatArray($permissions)
+    {
+        if (isset($permissions) && is_array($permissions) ) {
+            
+            $arr = [];
+            foreach ($permissions as $id => $permission) {
+                $temp = explode('.', $permission);
+                $arr[$temp[0]][$id] = $permission;
+            }
+
+            return $arr;
+        }
+
+        return;
     }
 }
