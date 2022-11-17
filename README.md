@@ -1,9 +1,17 @@
-Project Setup
+<h2>Project Setup</h2>
 
-Commands
-    php artisan migrate --seed
+<h3>Prerequisites</h3>
+<li>Laravel:"v8.0"</li>
+<li>php:"v7.4"</li>
 
 
-Admin login credentials <br>
-   <li> email=admin@admin.com</li>
-    <li>password=password</li>
+<h3>Commands</h3>
+<h5>php artisan migrate</h5>
+<h5>php artisan db:seed</h5>
+<h5>php artisan create:permission</h5>
+
+
+<b>Admin login credentials</b>
+<br>
+<li>email=admin@admin.com</li>
+<li>password=password</li>
