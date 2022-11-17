@@ -12,14 +12,16 @@
                         </div>
                         <div class="col-sm-6">
 
-                            @role('admin')
+                            @can('post.create')
                                 <a href="posts/create" class="btn btn-success">
                                     <i class="material-icons">&#xE147;</i> <span>Add New Blog</span>
                                 </a>
+                            @endcan
 
+                            @can('post.destroy')
                                 <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i
                                         class="material-icons">&#xE15C;</i> <span>Delete</span></a>
-                            @endrole
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -49,16 +51,19 @@
                                 <td>{{ $post->user->name ?? null }}</td>
 
                                 <td class="d-flex">
-                                    <a href="posts/{{ $post['id'] }}" class="show">
-                                        <i class="material-icons" data-toggle="tooltip" title="show">&#xe8f4;</i></a>
+                                    @can('post.show')
+                                        <a href="posts/{{ $post['id'] }}" class="show">
+                                            <i class="material-icons" data-toggle="tooltip" title="show">&#xe8f4;</i></a>
+                                    @endcan
 
-                                    @role('admin')
+                                    @can('post.edit')
                                         <a href="posts/{{ $post['id'] }}/edit" class="edit">
                                             <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-
+                                    @endcan
+                                    @can('post.destroy')
                                         <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i
                                                 class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                                    @endrole
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

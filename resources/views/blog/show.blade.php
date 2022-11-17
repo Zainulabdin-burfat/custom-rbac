@@ -17,14 +17,18 @@
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea name="description" rows="5" class="form-control">{{$post['description']}}</textarea>
+                                <textarea name="description" rows="5" class="form-control">{{ $post['description'] }}</textarea>
                             </div>
                         </div>
                     </fieldset>
 
                     <div class="modal-footer">
-                        <a type="button" href="/posts" class="btn btn-danger">Back</a>
-                        <a type="button" href="/posts/{{ $post['id'] }}/edit" class="btn btn-success">Edit</a>
+                        @can('post.index')
+                            <a type="button" href="/posts" class="btn btn-danger">Back</a>
+                        @endcan
+                        @can('post.edit')
+                            <a type="button" href="/posts/{{ $post['id'] }}/edit" class="btn btn-success">Edit</a>
+                        @endcan
                     </div>
                 </form>
 

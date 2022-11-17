@@ -5,8 +5,10 @@
 
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="POST" action="/posts">
-                    @csrf
+                @can('post.create')
+                    <form method="POST" action="/posts">
+                        @csrf
+                    @endcan
                     <div class="modal-header">
                         <h4 class="modal-title">Add User</h4>
                     </div>
@@ -23,8 +25,12 @@
                     </div>
 
                     <div class="modal-footer">
-                        <a type="button" href="/posts" class="btn btn-danger">Cancel</a>
-                        <input type="submit" class="btn btn-success" value="Add">
+                        @can('post.index')
+                            <a type="button" href="/posts" class="btn btn-danger">Cancel</a>
+                        @endcan
+                        @can('post.create')
+                            <input type="submit" class="btn btn-success" value="Add">
+                        @endcan
                     </div>
                 </form>
             </div>
