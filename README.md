@@ -1,4 +1,6 @@
-<h2>Project Setup</h2>
+<h2>Laravel 8 - Role Based Access Control</h2>
+
+<h3>Custom Route Wise Access Control</h3>
 
 <h3>Prerequisites</h3>
 <li>Laravel:"v8.0"</li>
@@ -9,6 +11,7 @@
 <h5>php artisan migrate</h5>
 <h5>php artisan db:seed</h5>
 <h5>php artisan create:permission</h5>
+<p>Permissions are created dynamically through command according to the controllers having methods</p>
 
 
 <b>Admin login credentials</b>
