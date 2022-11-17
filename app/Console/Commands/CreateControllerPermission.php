@@ -6,12 +6,9 @@ use App\Models\Permission;
 use App\Models\RolePermission;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use ReflectionClass;
 use ReflectionMethod;
 use Illuminate\Support\Str;
-use Reflection;
 
 class CreateControllerPermission extends Command
 {

@@ -52,15 +52,15 @@
                                     <a href="users/{{ $user['id'] }}" class="show">
                                         <i class="material-icons" data-toggle="tooltip" title="show">&#xe8f4;</i></a>
 
-                                    @can('edit-users')
+                                    {{-- @can('user.edit') --}}
                                         <a href="users/{{ $user['id'] }}/edit" class="edit">
                                             <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                                    @endcan
+                                    {{-- @endcan --}}
 
-                                    @can('delete-users')
+                                    {{-- @permission('user.delete') --}}
                                         <a href="" class="delete" data-toggle="modal"><i class="material-icons"
                                                 data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                                    @endcan
+                                    {{-- @endpermission --}}
                                 </td>
                             </tr>
 

@@ -22,11 +22,15 @@
 
                             <div class="form-group">
                                 <label>Permissions</label>
-                                @forelse ($role->permissions as $permission)
-                                    <li style="list-style: none"> {{ $permission->name }}</li>
-                                @empty
-                                    -
-                                @endforelse
+
+                                <div class="card p-1 text-success" style="max-height: 200px; overflow-y: auto">
+                                    @forelse ($role->permissions as $permission)
+                                        <li style="list-style: none"> {{ $permission->name }}</li>
+                                    @empty
+                                        -
+                                    @endforelse
+                                </div>
+
                             </div>
 
                         </div>

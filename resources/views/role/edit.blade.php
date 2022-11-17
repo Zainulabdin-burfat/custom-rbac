@@ -17,10 +17,6 @@
                             <label>Name</label>
                             <input type="text" name="name" value="{{ $role['name'] }}" class="form-control" required>
                         </div>
-                        <div class="form-group">
-                            <label>Slug</label>
-                            <input type="text" name="slug" value="{{ $role['slug'] }}" class="form-control" required>
-                        </div>
 
                         <div class="form-group">
                             <table class="table table-hover">
@@ -41,22 +37,20 @@
                                 </thead>
 
                                 <tbody>
-                                    @forelse ($permissions as $permission)
-                                        @php $permission = $permission->pluck('slug', 'id'); @endphp
-
+                                    @forelse ($permissions as $permissionId => $permissionName)
                                         <tr>
                                             <td>
                                                 <div class="form-check">
                                                     <input class="parent form-check-input" type="checkbox">
-                                                    <label class="form-check-label">{{ $permission['name'] }}</label>
+                                                    <label class="form-check-label">{{ $permissionName }}</label>
                                                 </div>
 
                                                 <label><input type=checkbox class="child form-check-input"
-                                                        name="{{ $permission['name'] }}[]"
-                                                        value={{ $permission['id'] }}></label>
+                                                        name="{{ $permissionName }}[]"
+                                                        value={{ $permissionId }}></label>
                                             </td>
                                             <td>
-                                                <span>{{ $permission['slug'] }}</span>
+                                                <span>{{ $permissionName }}</span>
 
                                             </td>
                                         </tr>

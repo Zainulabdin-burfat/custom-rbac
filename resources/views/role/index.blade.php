@@ -10,15 +10,9 @@
                             <h2>Manage <b>Role</b></h2>
                         </div>
                         <div class="col-sm-6">
-
-                            {{-- @role('admin') --}}
-                            @can('create', 'role')
-                                <a href="roles/create" class="btn btn-success">
-                                    <i class="material-icons">&#xE147;</i> <span>Add New Role</span>
-                                </a>
-
-                            @endcan
-                            {{-- @endrole --}}
+                            <a href="roles/create" class="btn btn-success">
+                                <i class="material-icons">&#xE147;</i> <span>Add New Role</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -29,8 +23,7 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
-                            <th>Slug</th>
-                            <th>Assign Permissions</th>
+                            <th>Permissions</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -41,31 +34,31 @@
                             <tr>
                                 <td> {{ $key + 1 ?? null }} </td>
                                 <td> {{ $role['name'] ?? null }} </td>
-                                <td> {{ $role['slug'] ?? null }} </td>
                                 <td>
+                                    <div class="card p-1 text-success" style="max-width: 50%;max-height: 200px; overflow-y: auto">
                                     @forelse ($role->permissions as $permission)
-                                        <li style="list-style: none"> {{ $permission->name }}</li>
-                                    @empty
-                                        -
-                                    @endforelse
+                                            <li style="list-style: none"> {{ $permission->name }}</li>
+                                        @empty
+                                            -
+                                        @endforelse
+
+                                    </div>
                                 </td>
 
                                 <td class="d-flex">
                                     <a href="roles/{{ $role['id'] }}" class="show">
                                         <i class="material-icons" data-toggle="tooltip" title="show">&#xe8f4;</i></a>
 
-                                    {{-- @can('list-users') --}}
-                                        <a href="roles/{{ $role['id'] }}/edit" class="edit">
-                                            <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                                    {{-- @endcan --}}
+                                    <a href="roles/{{ $role['id'] }}/edit" class="edit">
+                                        <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
 
-                                        <form action="/roles/{{ $role['id'] }}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit">
-                                                <i class="material-icons">&#xE872;</i>
-                                            </button>
-                                        </form>
+                                    <form action="/roles/{{ $role['id'] }}" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit">
+                                            <i class="material-icons">&#xE872;</i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty

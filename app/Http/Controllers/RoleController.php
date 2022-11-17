@@ -9,6 +9,7 @@ use App\Models\Permission;
 use App\Models\RolePermission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
@@ -65,7 +66,12 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $permissions = Permission::all()->groupBy('name');
+
+        
+        // $permissions = DB::select("SELECT LEFT(p.name ,LOCATE('.',p.name) - 1) as parent, p.name from permissions p GROUP BY p.name");
+        $permissions = Permission::all()->pluck('name', 'id')->toArray();
+
+        dd($permissions);
         return view('role.edit', compact(['role', 'permissions']));
     }
 
