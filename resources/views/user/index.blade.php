@@ -12,12 +12,17 @@
                         </div>
                         <div class="col-sm-6">
 
-                            <a href="users/create" class="btn btn-success">
-                                <i class="material-icons">&#xE147;</i> <span>Add New User</span>
-                            </a>
+                            @can('user.create')
+                                <a href="users/create" class="btn btn-success">
+                                    <i class="material-icons">&#xE147;</i> <span>Add New User</span>
+                                </a>
+                            @endcan
 
-                            <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i
-                                    class="material-icons">&#xE15C;</i> <span>Delete</span></a>
+                            @can('user.destroy')
+                                <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i
+                                        class="material-icons">&#xE15C;</i> <span>Delete</span></a>
+                            @endcan
+
                         </div>
                     </div>
                 </div>
@@ -49,18 +54,19 @@
                                     @endforelse
                                 </td>
                                 <td class="d-flex">
-                                    <a href="users/{{ $user['id'] }}" class="show">
-                                        <i class="material-icons" data-toggle="tooltip" title="show">&#xe8f4;</i></a>
-
-                                    {{-- @can('user.edit') --}}
+                                    @can('user.show')
+                                        <a href="users/{{ $user['id'] }}" class="show">
+                                            <i class="material-icons" data-toggle="tooltip" title="show">&#xe8f4;</i></a>
+                                    @endcan
+                                    @can('user.edit')
                                         <a href="users/{{ $user['id'] }}/edit" class="edit">
                                             <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                                    {{-- @endcan --}}
+                                    @endcan
 
-                                    {{-- @permission('user.delete') --}}
+                                    @permission('user.destroy')
                                         <a href="" class="delete" data-toggle="modal"><i class="material-icons"
                                                 data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                                    {{-- @endpermission --}}
+                                    @endpermission
                                 </td>
                             </tr>
 

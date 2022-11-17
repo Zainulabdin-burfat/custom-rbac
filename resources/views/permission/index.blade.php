@@ -29,7 +29,7 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
-                            <th>Slug</th>
+                            {{-- <th>Slug</th> --}}
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -40,7 +40,7 @@
                             <tr>
                                 <td> {{ $key + 1 ?? null }} </td>
                                 <td> {{ $permission['name'] ?? null }} </td>
-                                <td> {{ $permission['slug'] ?? null }} </td>
+                                {{-- <td> {{ $permission['slug'] ?? null }} </td> --}}
                                 {{-- <td>
                                     <ul class="list-group">
                                         @forelse (json_decode($permission['slug'], true) as $item)

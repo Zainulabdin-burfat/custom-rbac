@@ -15,10 +15,6 @@
                                 <label>Name</label>
                                 <input type="text" value="{{ $role['name'] }}" class="form-control">
                             </div>
-                            <div class="form-group">
-                                <label>Slug</label>
-                                <input type="text" value="{{ $role['slug'] }}" class="form-control">
-                            </div>
 
                             <div class="form-group">
                                 <label>Permissions</label>

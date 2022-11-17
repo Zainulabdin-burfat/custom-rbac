@@ -61,10 +61,10 @@ class CreateControllerPermission extends Command
     public function handle()
     {
 
-        Permission::truncate();
-        $this->newLine();
-        $this->info("Permission table truncated.");
-        $this->newLine();
+        // Permission::truncate();
+        // $this->newLine();
+        // $this->info("Permission table truncated.");
+        // $this->newLine();
 
 
         $files = File::files("app/Http/Controllers");

@@ -15,17 +15,6 @@
                                 <label>Name</label>
                                 <input type="text" value="{{ $permission['name'] }}" class="form-control">
                             </div>
-                            <div class="form-group">
-                                <label>Slug</label>
-
-                                <ul class="list-group">
-                                    @forelse (json_decode($permission['slug'], true) as $item)
-                                        <li class="list-group-item">{{$item}}</li>
-                                    @empty
-                                        <li class="list-group-item">No Data Found..!</li>
-                                    @endforelse
-                                </ul>
-                            </div>
                         </div>
                     </fieldset>
 

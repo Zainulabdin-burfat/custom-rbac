@@ -16,9 +16,8 @@ class Permissions
      */
     public function handle(Request $request, Closure $next)
     {
-        // dd( $request->route()->getActionName());
         if (!$request->user()->hasPermissionTo($request->route()->getName()))
-            abort(401);
+            abort(403);
 
         return $next($request);
     }
