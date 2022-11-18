@@ -25,6 +25,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
         ]);
 
-        Artisan::call("create:permission");
+        // Artisan::call("create:permission");
     }
 }

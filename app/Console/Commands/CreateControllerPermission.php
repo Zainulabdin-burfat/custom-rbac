@@ -69,6 +69,12 @@ class CreateControllerPermission extends Command
 
         $files = File::files("app/Http/Controllers");
 
+        if (isset($files[0]) && $files[0]->getBasename() === "Controller.php") {
+            unset($files[0]);
+        }
+        if(!count($files))
+            return $this->error("No Countrollers Found..!");
+
         foreach ($files as $controller) {
             $fileName       = $controller->getBasename();
             $filePathName   = $controller->getPathname();
@@ -79,6 +85,9 @@ class CreateControllerPermission extends Command
                 continue;
 
             $methods = (array)$this->getControllerMethodNames($controller, $controllerName);
+
+            if(!count($methods))
+                $this->warn("No Methods Found In $controllerName");
 
             foreach ($methods as $method) {
                 $permission = Permission::firstOrCreate(["name" => $method]);
@@ -99,19 +108,27 @@ class CreateControllerPermission extends Command
         foreach ($permissions as $permissionId) {
             $permissionIds[] = ['role_id' => 1, 'permission_id' => $permissionId];
         }
+
         if ($permissionIds) {
-            RolePermission::insert($permissionIds);
-            $this->info("All permissions assigned to admin role");
+            $rolePermission = RolePermission::insertOrIgnore($permissionIds);
+            if ($rolePermission)
+                $this->info("$rolePermission Permissions assigned to Admin role");
+            else
+                $this->info("Permissions already assigned");
+        } else {
+            $this->newLine();
+            $this->alert("No Permissions Found..!");
+            $this->newLine();
+            return false;
         }
 
         $this->newLine(2);
 
 
-        
 
 
         $this->newLine(2);
-        $this->info("Warning!, The last method of the controller should be destroy method otherwise it will not create other permissions.");
+        $this->alert("Note! The last method of the controller should be destroy method otherwise it will not create other permissions.");
         $this->newLine(2);
 
         // $this->newLine(2);
