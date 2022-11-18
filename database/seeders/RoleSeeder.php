@@ -22,6 +22,15 @@ class RoleSeeder extends Seeder
             ['name' => 'Manager'],
         ];
         
+        // Role::create([
+        //     'name' => 'Editor',
+        //     'slug' => 'editor',
+        //     'permissions' => [
+        //         'update-post' => true,
+        //         'publish-post' => true,
+        //     ]
+        // ]);
+
         Role::insert($data);
 
         $data = [
