@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Gate;
 
 class PostPolicy
 {
@@ -18,7 +19,10 @@ class PostPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return Gate::allows('post.index');
+
+        // $response = Gate::authorize('post.index');
+        // return $response->allowed();
     }
 
     /**
@@ -30,7 +34,8 @@ class PostPolicy
      */
     public function view(User $user, Post $post)
     {
-        //
+        $response = Gate::authorize('post.show');
+        return $response->allowed();
     }
 
     /**
@@ -41,7 +46,8 @@ class PostPolicy
      */
     public function create(User $user)
     {
-        //
+        $response = Gate::authorize('post.create');
+        return $response->allowed();
     }
 
     /**
@@ -53,7 +59,8 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        return $user->id === $post->user_id;
+        $response = Gate::authorize('post.update');
+        return $response->allowed();
     }
 
     /**
@@ -65,7 +72,8 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        //
+        $response = Gate::authorize('post.destroy');
+        return $response->allowed();
     }
 
     /**

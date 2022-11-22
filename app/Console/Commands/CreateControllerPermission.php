@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\Permission;
@@ -44,14 +46,23 @@ class CreateControllerPermission extends Command
 
     public function getControllerMethodNames($controller, $controllerName, $namespace = "App\Http\Controllers")
     {
-        $controller_class = new ReflectionClass($namespace . '\\' . $controller);
-        $controller_methods = $controller_class->getMethods(ReflectionMethod::IS_PUBLIC);
+
+        // $controller_class = new ReflectionClass($namespace . '\\' . $controller);
+        // $controller_methods = $controller_class->getMethods(ReflectionMethod::IS_PUBLIC);
+
+        $controller_methods = get_class_methods($namespace . '\\' . $controller);
 
         $methods = [];
         foreach ($controller_methods as $method) {
-            $methods[] = (string) Str::of($controllerName)->append(" " . $method->name)->slug('.');
 
-            if ($method->name === "destroy")
+            if($method === "__construct")
+                continue;
+
+            $methods[] = (string) Str::of($controllerName)->append(" " . $method)->slug('.');
+            // $methods[] = (string) Str::of($controllerName)->append(" " . $method->name)->slug('.');
+
+            // if ($method->name === "destroy")
+            if ($method === "destroy")
                 break;
         }
 
@@ -67,7 +78,18 @@ class CreateControllerPermission extends Command
         // $this->newLine();
 
 
+        $this->newLine(2);
+
         $files = File::files("app/Http/Controllers");
+
+        if (isset($files[0]) && $files[0]->getBasename() === "Controller.php") {
+            unset($files[0]);
+        }
+        if(!count($files))
+            return $this->error("No Countrollers Found..!");
+
+        $newPermissions = 0;
+        $oldPermissions = 0;
 
         foreach ($files as $controller) {
             $fileName       = $controller->getBasename();
@@ -80,16 +102,24 @@ class CreateControllerPermission extends Command
 
             $methods = (array)$this->getControllerMethodNames($controller, $controllerName);
 
+            if(!count($methods))
+                $this->warn("No Methods Found In $controllerName");
+
             foreach ($methods as $method) {
                 $permission = Permission::firstOrCreate(["name" => $method]);
 
                 if ($permission->wasRecentlyCreated) {
                     $this->info("$controller permission created ($method)");
+                    $newPermissions++;
                 } else {
-                    $this->info("$controller permission already exists ($method)");
+                    $this->warn("$controller permission already exists ($method)");
+                    $oldPermissions++;
                 }
             }
+            $this->newLine();
+            
         }
+        $this->info("$newPermissions new permissions were created and $oldPermissions permissions already exists.");
 
         $this->newLine(2);
 
@@ -99,27 +129,27 @@ class CreateControllerPermission extends Command
         foreach ($permissions as $permissionId) {
             $permissionIds[] = ['role_id' => 1, 'permission_id' => $permissionId];
         }
+
         if ($permissionIds) {
-            RolePermission::insert($permissionIds);
-            $this->info("All permissions assigned to admin role");
+            $rolePermission = RolePermission::insertOrIgnore($permissionIds);
+            if ($rolePermission)
+                $this->info("$rolePermission Permissions assigned to Admin");
+            else
+                $this->warn("Permissions already assigned to Admin");
+        } else {
+            $this->newLine();
+            $this->warn("No Permissions Found..!");
+            $this->newLine();
         }
 
         $this->newLine(2);
 
 
-        
 
 
         $this->newLine(2);
-        $this->info("Warning!, The last method of the controller should be destroy method otherwise it will not create other permissions.");
+        $this->alert("Note! The last method of the controller should be destroy method otherwise it will not create permissions after destroy method.");
         $this->newLine(2);
 
-        // $this->newLine(2);
-        // $this->error('Something went wrong!');
-        // $this->newLine();
-        // $this->line('Display this on the screen');
-        // Artisan::command('mail:send {user}', function ($user) {
-        //     $this->info("Sending email to: {$user}!");
-        // });
     }
 }
