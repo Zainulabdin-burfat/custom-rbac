@@ -54,6 +54,10 @@ class CreateControllerPermission extends Command
 
         $methods = [];
         foreach ($controller_methods as $method) {
+
+            if($method === "__construct")
+                continue;
+
             $methods[] = (string) Str::of($controllerName)->append(" " . $method)->slug('.');
             // $methods[] = (string) Str::of($controllerName)->append(" " . $method->name)->slug('.');
 
