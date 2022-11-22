@@ -61,8 +61,9 @@
                                             <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
                                     @endcan
                                     @can('post.destroy')
-                                        <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i
-                                                class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                                        <a href="#deleteEmployeeModal" id="{{ $post['id'] }}" class="delete"
+                                            data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
+                                                title="Delete">&#xE872;</i></a>
                                     @endcan
                                 </td>
                             </tr>
@@ -107,7 +108,7 @@
                         </div>
                         <div class="modal-footer">
                             <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-danger" value="Delete">
+                            <input type="button" onclick="deleteItem();" class="btn btn-danger" value="Delete">
                         </div>
                     </form>
                 </div>
