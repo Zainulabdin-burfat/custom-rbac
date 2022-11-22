@@ -2,9 +2,11 @@
 
 <h3>Custom Route Wise Access Control</h3>
 
+<p>2 Authorization layers, the one is using Gates and Policies, and the second is using custom command route wise using route name eg: (post.index, post.create)</p>
+
 <h3>Prerequisites</h3>
-<li>Laravel:"v8.0"</li>
-<li>php:"v7.4"</li>
+<li>Laravel 8</li>
+<li>php >= 7.3</li>
 
 
 <h3>Commands</h3>
