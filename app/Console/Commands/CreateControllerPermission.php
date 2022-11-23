@@ -26,7 +26,7 @@ class CreateControllerPermission extends Command
      *
      * @var string
      */
-    protected $description = 'This Command will create permissions of the controllers.';
+    protected $description = 'Create permissions of the controllers.';
 
     /**
      * Create a new command instance.
