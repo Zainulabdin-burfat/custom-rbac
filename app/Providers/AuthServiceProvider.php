@@ -3,10 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Permission;
-use App\Models\Role;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -30,17 +29,28 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::routes();
 
+        // if (! $this->app->routesAreCached()) {
+        //     Passport::routes();
+        // }
 
         $permissions = Permission::all();
 
+        $arr = [];
         foreach ($permissions as $permission) {
             $arr[$permission->name] = $permission->name;
         }
+
         Passport::tokensCan($arr);
 
+        Passport::tokensExpireIn(now()->addSeconds(20));
+        Passport::personalAccessTokensExpireIn(now()->addSeconds(20));
+
+        // Passport::refreshTokensExpireIn(now()->addHours(1));
 
 
-        
+
+
+
         // $roles = Role::with('permissions')->get();
         // $permissionsArray = [];
         // foreach ($roles as $role) {
