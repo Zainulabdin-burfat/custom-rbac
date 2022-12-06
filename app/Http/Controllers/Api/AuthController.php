@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
     public function login(LoginRequest $request)
     {
@@ -17,7 +17,6 @@ class LoginController extends Controller
 
             $user = auth()->user();
 
-            // $token = $user->createToken('Laravel Password Grant Client')->accessToken;
             // dd(Passport::hasScope('place-orders'));
 
             $permissions = [];
@@ -29,6 +28,19 @@ class LoginController extends Controller
             $permissions = call_user_func_array('array_merge', $permissions);
 
             $token = $user->createToken('My Token', array_unique($permissions))->accessToken;
+
+            // $response = Http::post('http://custom-rbac.test/oauth/token',
+            //     [
+            //         'email' => $request->email,
+            //         'password' => $request->password,
+            //         'grant_type' => 'password',
+            //         'client_id' => '3',
+            //         'client_secret' => 'elqUDHOkvAympC1jDHByNkuKPlQPURO1gkqWnoS4',
+            //         'scope' => ''
+            //     ]
+            // );
+
+            // dd($response);
 
             $data = [
                 "name" => $user->name,

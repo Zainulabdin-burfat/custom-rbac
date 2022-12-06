@@ -33,14 +33,14 @@ class AuthServiceProvider extends ServiceProvider
         //     Passport::routes();
         // }
 
-        $permissions = Permission::all();
+        $permissions = Permission::select('name')->get()->pluck('name')->toArray();
+        // dd($permissions);
+        // $arr = [];
+        // foreach ($permissions as $permission) {
+        //     $arr[$permission->name] = $permission->name;
+        // }
 
-        $arr = [];
-        foreach ($permissions as $permission) {
-            $arr[$permission->name] = $permission->name;
-        }
-
-        Passport::tokensCan($arr);
+        Passport::tokensCan($permissions);
 
         Passport::tokensExpireIn(now()->addSeconds(20));
         Passport::personalAccessTokensExpireIn(now()->addSeconds(20));

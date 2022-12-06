@@ -40,8 +40,10 @@ class PermissionsServiceProvider extends ServiceProvider
 
         //Blade directives
         Blade::directive('permission', function ($permission) {
-
-            $permission = (string)trim($permission,'"');
+            // $permission = (string)trim($permission,'"');
+            // $permission = (string)trim($permission,"'");
+            // dd($permission);
+            // dd(Auth::user()->hasPermissionTo($permission));
             return "<?php if(Auth::user()->hasPermissionTo($permission) ){ ?>";
         });
 

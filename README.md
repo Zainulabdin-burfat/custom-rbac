@@ -6,14 +6,14 @@
 
 <h3>Prerequisites</h3>
 <li>Laravel 8</li>
-<li>php >= 7.3</li>
+<li>php = 7.3|7.4</li>
 
 
 <h3>Commands</h3>
 <h5>composer install</h5>
 <h5>composer require laravel/breeze:1.9.2</h5>
 <h5>php artisan breeze:install</h5>
-<h5>npm install && nom run dev</h5>
+<h5>npm install && npm run dev</h5>
 <h5>php artisan vendor:publish <b>then insert 0 and Enter</b></h5>
 <h5>php artisan migrate</h5>
 <h5>php artisan db:seed</h5>

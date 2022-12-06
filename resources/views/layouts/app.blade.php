@@ -306,15 +306,15 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="navbar" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
 
 
-                            @can('post.index')
+                            @permission('post.index')
                                 <li class="nav-item">
                                     <a class="nav-link" href="/posts">Blog<span class="sr-only">(current)</span></a>
                                 </li>
-                            @endcan
+                            @endpermission
 
                             @can('user.index')
                                 <li class="nav-item">
@@ -322,23 +322,23 @@
                                 </li>
                             @endcan
 
-                            @can('role.index')
+                            @permission('role.index')
                                 <li class="nav-item">
                                     <a class="nav-link" href="/roles">Role</a>
                                 </li>
-                            @endcan
+                            @endpermission
 
-                            @can('permission.index')
+                            {{-- @can('permission.index')
                                 <li class="nav-item">
                                     <a class="nav-link" href="/permissions">Permission</a>
                                 </li>
-                            @endcan
+                            @endcan --}}
 
-                            @can('user.index')
+                            {{-- @can('user.index') --}}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/dashboard">{{ Auth::user()->name }}</a>
+                                    <a class="nav-link" href="/dashboard">{{ Auth::user()->name ?? '-' }}</a>
                                 </li>
-                            @endcan
+                            {{-- @endcan --}}
 
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf

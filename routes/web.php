@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 // Route wise access
 
-// Route::group(['middleware' => ['auth', 'permissions']], function () {
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'permissions']], function () {
+// Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', 'UserController@index')->name('user.index');
@@ -37,7 +37,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Route::get('/', 'PostController@index')->name('post.index')->middleware('permissions');
 
-        Route::get('/', 'PostController@index');
+        Route::get('/', 'PostController@index')->name('post.index');
         
         Route::get('/create', 'PostController@create')->name('post.create')->middleware('can:post.create,post');
         Route::post('/create', 'PostController@store')->name('post.store');

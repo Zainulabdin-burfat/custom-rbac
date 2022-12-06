@@ -14,24 +14,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/signin', [App\Http\Controllers\Api\LoginController::class, 'login']);
+Route::post('/signin', [App\Http\Controllers\Api\AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:api']], function(){
 
     Route::post('/users', 'Api\UserController@index')->middleware(['scope:user.index']);
     Route::post('/posts', 'Api\PostController@index')->middleware(['scope:post.index']);
+    // ->middleware(['scopes:post.index,user.index']);
 
 
-    Route::post('/test', function (Request $request) {
-        if ($request->user()->tokenCan('post.index')) {
-            return 'Can list posts';
-        }
-    });
+    // Route::post('/test', function (Request $request) {
+    //     if ($request->user()->tokenCan('post.index')) {
+    //         return 'Can list posts';
+    //     }
+    // });
 });
 
-Route::post('/test', function(){
-    return "test route working";
-});
+// Route::post('/test', function(){
+//     return "test route working";
+// });
 
 
 // Route::post('/orders', function () {
