@@ -22,7 +22,6 @@ class User extends Authenticatable
 
     public function hasPermissionTo($permission)
     {
-        dd($this->hasRole('admin'));
         foreach ($this->roles as $role) {
             $permissions = $role->permissions->pluck('name')->toArray();
             if (in_array($permission, $permissions))
