@@ -24,7 +24,7 @@ class CreateRoleUser extends Migration
             $table->primary(['user_id', 'role_id']);
             $table->index(['user_id', 'role_id']);
 
-            $table->timestamps();
+            // $table->timestamps();
         });
     }
 

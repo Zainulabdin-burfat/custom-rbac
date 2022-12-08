@@ -30,7 +30,7 @@ class PermissionsServiceProvider extends ServiceProvider
         try {
             Permission::get()->map(function ($permission) {
                 Gate::define($permission->name, function ($user) use ($permission) {
-                    return $user->hasPermissionTo($permission->name);
+                    return $user->hasPermissionTo($permission->name) || $user->hasDirectPermissionTo($permission->name);
                 });
             });
         } catch (\Exception $e) {
@@ -38,18 +38,26 @@ class PermissionsServiceProvider extends ServiceProvider
             return false;
         }
 
+
+
         //Blade directives
+
+        // @permission('Admin') @endpermission
         Blade::directive('permission', function ($permission) {
-            // $permission = (string)trim($permission,'"');
-            // $permission = (string)trim($permission,"'");
-            // dd($permission);
-            // dd(Auth::user()->hasPermissionTo($permission));
-            return "<?php if(Auth::user()->hasPermissionTo($permission) ){ ?>";
+            return "<?php if(Auth::check() && (Auth::user()->hasPermissionTo($permission) || Auth::user()->hasDirectPermissionTo($permission)) ){ ?>";
         });
 
         Blade::directive('endpermission', function () {
             return "<?php } ?>";
         });
 
+        // @role('Admin') @endrole
+        Blade::directive('role', function ($role) {
+            return "<?php if(Auth::check() && Auth::user()->hasRole($role) ){ ?>";
+        });
+
+        Blade::directive('endrole', function () {
+            return "<?php } ?>";
+        });
     }
 }

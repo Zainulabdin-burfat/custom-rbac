@@ -28,23 +28,11 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::routes();
-
-        // if (! $this->app->routesAreCached()) {
-        //     Passport::routes();
-        // }
-
         $permissions = Permission::select('name')->get()->pluck('name')->toArray();
-        // dd($permissions);
-        // $arr = [];
-        // foreach ($permissions as $permission) {
-        //     $arr[$permission->name] = $permission->name;
-        // }
-
         Passport::tokensCan($permissions);
 
         Passport::tokensExpireIn(now()->addSeconds(20));
         Passport::personalAccessTokensExpireIn(now()->addSeconds(20));
-
         // Passport::refreshTokensExpireIn(now()->addHours(1));
 
 
