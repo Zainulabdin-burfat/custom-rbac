@@ -69,4 +69,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+
+    public function formatIndex()
+    {
+        return [
+            "id" => $this->id,
+            "name" => $this->name,
+            "email" => $this->email,
+            "roles" => $this->roles->pluck('name', 'id')->toArray(),
+        ];
+    }
 }
