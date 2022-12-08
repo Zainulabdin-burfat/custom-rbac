@@ -49,7 +49,7 @@ class User extends Authenticatable
     public function hasRole($role)
     {
         foreach ($this->roles->toArray() as $roleName) {
-            if ( strtolower($roleName['name']) == strtolower($role))
+            if (strtolower($roleName['name']) == strtolower($role))
                 return true;
         }
         return false;
@@ -64,7 +64,6 @@ class User extends Authenticatable
     {
         return $this->permissions->pluck('name')->toArray();
     }
-
 
     public function posts()
     {

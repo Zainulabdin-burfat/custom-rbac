@@ -334,11 +334,9 @@
                                 </li>
                             @endcan --}}
 
-                            {{-- @can('user.index') --}}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/dashboard">{{ Auth::user()->name ?? '-' }}</a>
-                                </li>
-                            {{-- @endcan --}}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/dashboard">{{ Auth::user()->name ?? '-' }}</a>
+                            </li>
 
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
